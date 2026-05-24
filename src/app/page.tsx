@@ -11,14 +11,13 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import type { FormEvent, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
 const CONTACT_EMAIL = "contact@summerhouz.com";
 
 type Lang = "fr" | "en";
 const DEFAULT_LANG: Lang = "fr";
-const LANG_STORAGE_KEY = "summerhouz_lang";
 const PENDING_LOADER_KEY = "summerhouz_pending_loader";
 
 type MediaSlide = {
@@ -45,7 +44,7 @@ const heroSlidesByLang: Record<Lang, MediaSlide[]> = {
     {
       id: "resort",
       kicker: "POOL / RESORT",
-      headline: "Rooftop moods. Lumière dorée.",
+      headline: "Ambiance rooftop. Lumière dorée.",
       subline: "Des lieux qui donnent envie d’y être — tout de suite.",
       videoSrc:
         "https://cdn.coverr.co/videos/coverr-hotel-in-the-philippines-2930/1080p.mp4",
@@ -146,7 +145,7 @@ const galleryImages = [
 
 const services = [
   {
-    title: "Airbnb Management",
+    title: { fr: "Gestion Airbnb", en: "Airbnb Management" },
     detail: {
       fr: "Pilotage complet, transparence, reporting clair.",
       en: "Full management with clear reporting and transparency.",
@@ -154,7 +153,7 @@ const services = [
     icon: "M7 7h10M7 12h10M7 17h7M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z",
   },
   {
-    title: "Guest Experience",
+    title: { fr: "Expérience voyageurs", en: "Guest Experience" },
     detail: {
       fr: "Accueil fluide, messages premium, attentions lifestyle.",
       en: "Seamless welcome, premium messaging, lifestyle touches.",
@@ -162,7 +161,7 @@ const services = [
     icon: "M12 3l2.2 4.5L19 8l-3.5 3.4.8 4.8L12 14.8 7.7 16.2 8.5 11.4 5 8l4.8-.5L12 3Z",
   },
   {
-    title: "Cleaning Coordination",
+    title: { fr: "Coordination ménage", en: "Cleaning Coordination" },
     detail: {
       fr: "Standards boutique-hotel, contrôles qualité, rythme parfait.",
       en: "Boutique-hotel standards with quality checks and perfect timing.",
@@ -170,7 +169,7 @@ const services = [
     icon: "M9 6h6M10 6l1-2h2l1 2M7 8h10l-1 12H8L7 8Z",
   },
   {
-    title: "Listing Optimization",
+    title: { fr: "Optimisation annonce", en: "Listing Optimization" },
     detail: {
       fr: "Storytelling, visuels, conversion, présence premium.",
       en: "Storytelling, visuals, conversion — premium presence.",
@@ -178,7 +177,7 @@ const services = [
     icon: "M6 19V5m0 0h12M6 5l12 14",
   },
   {
-    title: "Smart Pricing",
+    title: { fr: "Tarification intelligente", en: "Smart Pricing" },
     detail: {
       fr: "Stratégie dynamique orientée performance et saisonnalité.",
       en: "Dynamic pricing strategy tuned for seasons and performance.",
@@ -186,7 +185,7 @@ const services = [
     icon: "M4 16l4-4 3 3 6-6M20 7v6h-6",
   },
   {
-    title: "Property Care",
+    title: { fr: "Maintenance & suivi", en: "Property Care" },
     detail: {
       fr: "Maintenance, suivi proactif, soin des détails.",
       en: "Maintenance, proactive follow-up, detail-driven care.",
@@ -194,7 +193,7 @@ const services = [
     icon: "M12 7l7 4v9H5v-9l7-4Zm0 0V3",
   },
   {
-    title: "Premium Hospitality",
+    title: { fr: "Hospitalité premium", en: "Premium Hospitality" },
     detail: {
       fr: "Process, ton, élégance : la sensation “hôtel” à domicile.",
       en: "Process, tone, elegance — hotel feeling at home.",
@@ -202,7 +201,7 @@ const services = [
     icon: "M7 10h10M9 14h6M6 20h12a2 2 0 0 0 2-2V9a5 5 0 0 0-5-5H9a5 5 0 0 0-5 5v9a2 2 0 0 0 2 2Z",
   },
   {
-    title: "Business Stays",
+    title: { fr: "Séjours business", en: "Business Stays" },
     detail: {
       fr: "Séjours business : rapide, fiable, haut de gamme.",
       en: "Business stays: fast, reliable, high-end.",
@@ -224,24 +223,44 @@ const statsByLang = {
   ],
 } as const satisfies Record<Lang, Array<{ kpi: string; label: string }>>;
 
-const whySteps = [
-  {
-    title: "Onboarding simple",
-    detail: "Audit, recommandations design, mise en place des standards.",
-  },
-  {
-    title: "Mise en scène & optimisation",
-    detail: "Photos, listing, pricing et parcours voyageurs soignés.",
-  },
-  {
-    title: "Opérations fluides",
-    detail: "Ménage, maintenance, contrôle qualité et coordination.",
-  },
-  {
-    title: "Rentabilité premium",
-    detail: "Suivi, ajustements, amélioration continue et transparence.",
-  },
-] as const;
+const whyStepsByLang = {
+  fr: [
+    {
+      title: "Onboarding simple",
+      detail: "Audit, recommandations design, mise en place des standards.",
+    },
+    {
+      title: "Mise en scène & optimisation",
+      detail: "Photos, listing, pricing et parcours voyageurs soignés.",
+    },
+    {
+      title: "Opérations fluides",
+      detail: "Ménage, maintenance, contrôle qualité et coordination.",
+    },
+    {
+      title: "Rentabilité premium",
+      detail: "Suivi, ajustements, amélioration continue et transparence.",
+    },
+  ],
+  en: [
+    {
+      title: "Simple onboarding",
+      detail: "Audit, design recommendations, and standards setup.",
+    },
+    {
+      title: "Staging & optimization",
+      detail: "Photos, listing, pricing, and guest journey.",
+    },
+    {
+      title: "Smooth operations",
+      detail: "Cleaning, maintenance, quality control, coordination.",
+    },
+    {
+      title: "Premium profitability",
+      detail: "Tracking, adjustments, and clear transparency.",
+    },
+  ],
+} as const satisfies Record<Lang, Array<{ title: string; detail: string }>>;
 
 function cn(...parts: Array<string | undefined | false>) {
   return parts.filter(Boolean).join(" ");
@@ -856,7 +875,7 @@ function GalleryModal({
 
 export default function Home({ initialLang }: { initialLang?: Lang }) {
   const router = useRouter();
-  const [lang, setLang] = useState<Lang>(initialLang ?? DEFAULT_LANG);
+  const lang = initialLang ?? DEFAULT_LANG;
   const [galleryOpenIndex, setGalleryOpenIndex] = useState<number | null>(null);
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const [navOnHero, setNavOnHero] = useState(true);
@@ -950,7 +969,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
           sendEmail: "Envoyer l’email →",
           mailHint:
             "En envoyant, votre client mail s’ouvrira avec le message pré-rempli.",
-          powered: "Powered by Razorbill",
+          powered: "Propulsé par Razorbill",
         }
       : {
           explore: "Explore",
@@ -1036,10 +1055,6 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
 
   const onLangChange = (next: Lang) => {
     if (next === lang) return;
-    setLang(next);
-    try {
-      window.localStorage.setItem(LANG_STORAGE_KEY, next);
-    } catch {}
     const currentPath = window.location.pathname;
     const isEnPath = currentPath === "/en" || currentPath.startsWith("/en/");
     const targetPath = next === "en" ? "/en" : "/";
@@ -1047,7 +1062,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
       try {
         window.sessionStorage.setItem(
           PENDING_LOADER_KEY,
-          JSON.stringify({ start: Date.now(), minMs: 8000 }),
+          JSON.stringify({ start: Date.now(), minMs: 4500 }),
         );
       } catch {}
       router.push(targetPath);
@@ -1055,9 +1070,6 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
   };
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(LANG_STORAGE_KEY, lang);
-    } catch {}
     document.documentElement.lang = lang;
   }, [lang]);
 
@@ -1068,26 +1080,6 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
     }, 7200);
     return () => window.clearInterval(id);
   }, [reduceMotion, heroSlides.length]);
-
-  const onContactSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const name = String(form.get("name") ?? "").trim();
-    const email = String(form.get("email") ?? "").trim();
-    const message = String(form.get("message") ?? "").trim();
-
-    const subject = encodeURIComponent(
-      `SummerHouz — ${name.length ? name : lang === "fr" ? "Contact" : "Inquiry"}`,
-    );
-    const body = encodeURIComponent(
-      lang === "fr"
-        ? `Nom: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-        : `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-    );
-
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-    e.currentTarget.reset();
-  };
 
   useEffect(() => {
     const root = momentsTrackRef.current;
@@ -1460,7 +1452,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
 
             <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {services.map((s, i) => (
-                <Reveal key={s.title} delay={0.04 * i}>
+                <Reveal key={s.title.en} delay={0.04 * i}>
                   <div className="group relative h-full overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-6 shadow-[0_1px_0_rgba(255,255,255,0.45)_inset] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_90px_rgba(18,13,9,0.18)]">
                     <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_circle_at_20%_0%,rgba(255,176,98,0.22),transparent_55%),radial-gradient(800px_circle_at_90%_40%,rgba(214,179,106,0.18),transparent_55%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                     <div className="relative">
@@ -1473,7 +1465,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                             />
                           </div>
                           <div className="text-sm font-semibold tracking-wide text-[color:var(--fg)]">
-                            {s.title}
+                            {s.title[lang]}
                           </div>
                         </div>
                         <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface-2)] transition-colors group-hover:bg-[color:var(--surface)]">
@@ -1514,7 +1506,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                           "Bois chaud",
                           "Doré élégant",
                           "Rooftop",
-                          "Coffee mornings",
+                          "Rituels café",
                           "Immersion",
                         ]
                       : [
@@ -1553,16 +1545,22 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                         <FallbackImg
                           src="https://cdn.coverr.co/videos/coverr-infinity-pool-by-the-ocean-9788/thumbnail?width=1920"
                           fallbackSrc={galleryImages[1].src}
-                          alt="Infinity pool, lumière chaude, ambiance resort"
+                          alt={
+                            lang === "fr"
+                              ? "Piscine infinity, lumière chaude, ambiance resort"
+                              : "Infinity pool, warm light, resort vibe"
+                          }
                           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
                         <div className="absolute bottom-4 left-4 right-4">
                           <div className="text-sm font-semibold text-white">
-                            Infinity pool
+                            {lang === "fr" ? "Piscine infinity" : "Infinity pool"}
                           </div>
                           <div className="mt-1 text-sm text-white/70">
-                            Luxe calme, vibes vacances.
+                            {lang === "fr"
+                              ? "Luxe calme, vibes vacances."
+                              : "Quiet luxury, vacation energy."}
                           </div>
                         </div>
                       </div>
@@ -1589,7 +1587,11 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                             observeKey="coffee-card"
                             poster="https://cdn.coverr.co/videos/coverr-a-cup-of-coffee-1386/thumbnail?width=1920"
                             fallbackPoster={galleryImages[3].src}
-                            alt="Coffee mornings, lumière douce"
+                            alt={
+                              lang === "fr"
+                                ? "Rituel café, lumière douce"
+                                : "Coffee mornings, soft light"
+                            }
                             imageClassName="absolute inset-0 h-full w-full object-cover opacity-90"
                             videoClassName="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
                             failed={Boolean(failedVideos["video:coffee-card"])}
@@ -1613,7 +1615,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
                           <div className="absolute bottom-4 left-4 right-4">
                             <div className="text-sm font-semibold text-white">
-                              {lang === "fr" ? "Coffee mornings" : "Coffee mornings"}
+                              {lang === "fr" ? "Rituel café" : "Coffee mornings"}
                             </div>
                             <div className="mt-1 text-sm text-white/70">
                               {lang === "fr"
@@ -1754,7 +1756,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                     {
                       id: "01",
                       kicker: "POOL / SUNSET",
-                      title: "Infinity serenity",
+                      title: "Sérénité infinie",
                       sub: "Luxe calme, horizon, air chaud.",
                       poster:
                         "https://cdn.coverr.co/videos/coverr-infinity-pool-by-the-ocean-9788/thumbnail?width=1920",
@@ -1764,7 +1766,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                     {
                       id: "02",
                       kicker: "ROOFTOP NIGHT",
-                      title: "City glow",
+                      title: "Lueur urbaine",
                       sub: "Ambiance lounge, détails dorés, silence.",
                       poster:
                         "https://cdn.coverr.co/videos/coverr-steamy-rooftop-pool-8919/thumbnail?width=1920",
@@ -1774,7 +1776,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                     {
                       id: "03",
                       kicker: "COFFEE MORNING",
-                      title: "Soft rituals",
+                      title: "Rituels doux",
                       sub: "Matin clair, textures, confort premium.",
                       poster:
                         "https://cdn.coverr.co/videos/coverr-a-cup-of-coffee-1386/thumbnail?width=1920",
@@ -1784,7 +1786,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                     {
                       id: "04",
                       kicker: "TRAVEL / VIBE",
-                      title: "Golden hour",
+                      title: "Heure dorée",
                       sub: "Voyage, chaleur, envie de rester.",
                       poster:
                         "https://cdn.coverr.co/videos/coverr-sunset-in-costa-rica-5323/thumbnail?width=1920",
@@ -2058,29 +2060,7 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
             </Reveal>
 
             <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
-              {(lang === "fr"
-                ? whySteps
-                : [
-                    {
-                      title: "Simple onboarding",
-                      detail:
-                        "Audit, design recommendations, and standards setup.",
-                    },
-                    {
-                      title: "Staging & optimization",
-                      detail: "Photos, listing, pricing, and guest journey.",
-                    },
-                    {
-                      title: "Smooth operations",
-                      detail:
-                        "Cleaning, maintenance, quality control, coordination.",
-                    },
-                    {
-                      title: "Premium profitability",
-                      detail: "Tracking, adjustments, and clear transparency.",
-                    },
-                  ]
-              ).map((s, i) => (
+              {whyStepsByLang[lang].map((s, i) => (
                 <Reveal key={s.title} delay={0.06 * i}>
                   <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-7">
                     <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-[color:var(--sand)]/15 blur-2xl" />
@@ -2130,12 +2110,12 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                           detail: "rooftops, pool, architecture, silhouettes.",
                         },
                         {
-                          title: "Luxury interiors",
+                          title: "Intérieurs premium",
                           detail:
                             "bois chaud, pierre claire, lignes minimalistes.",
                         },
                         {
-                          title: "Cinematic motion",
+                          title: "Mouvement cinématique",
                           detail: "travellings lents, zoom subtil, silence.",
                         },
                       ]
@@ -2182,7 +2162,11 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                         observeKey="inspiration-resort"
                         poster="https://cdn.coverr.co/videos/coverr-hotel-in-the-philippines-2930/thumbnail?width=1920"
                         fallbackPoster={galleryImages[2].src}
-                        alt="Resort energy, pool et lumière dorée"
+                        alt={
+                          lang === "fr"
+                            ? "Vibes resort, pool et lumière dorée"
+                            : "Resort vibes, pool and golden light"
+                        }
                         imageClassName="absolute inset-0 h-full w-full object-cover opacity-85"
                         videoClassName="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
                         failed={Boolean(failedVideos["video:inspiration-resort"])}
@@ -2207,13 +2191,15 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                       <div className="absolute bottom-5 left-5 right-5">
                         <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[10px] font-semibold tracking-[0.18em] text-white/90 backdrop-blur-md">
                           <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--gold)]" />
-                          VIDEO MOODBOARD
+                          {lang === "fr" ? "VIDÉO MOODBOARD" : "VIDEO MOODBOARD"}
                         </div>
                         <div className="mt-3 text-lg font-semibold text-white">
-                          Resort energy
+                          {lang === "fr" ? "Vibes resort" : "Resort vibes"}
                         </div>
                         <div className="mt-2 text-sm text-white/75">
-                          Pool, palmiers, lumière dorée.
+                          {lang === "fr"
+                            ? "Pool, palmiers, lumière dorée."
+                            : "Pool, palms, golden light."}
                         </div>
                       </div>
                     </div>
@@ -2222,28 +2208,37 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                   {[
                     {
                       src: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=2200&q=85",
-                      alt: "Appartement premium, textures et lumière naturelle",
-                      label: "Apartments",
+                      label: { fr: "Appartements", en: "Apartments" },
+                      caption: {
+                        fr: "Appartement premium, textures et lumière naturelle",
+                        en: "Premium apartments, textures and natural light",
+                      },
                     },
                     {
                       src: "https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=2200&q=85",
-                      alt: "Détails déco luxe, ambiance chaleureuse",
-                      label: "Details",
+                      label: { fr: "Détails", en: "Details" },
+                      caption: {
+                        fr: "Détails déco luxe, ambiance chaleureuse",
+                        en: "Luxury details, warm atmosphere",
+                      },
                     },
                     {
                       src: "https://images.unsplash.com/photo-1523755231516-e43fd2e8dca5?auto=format&fit=crop&w=2200&q=85",
-                      alt: "Cuisine design, finitions premium",
-                      label: "Design",
+                      label: { fr: "Design", en: "Design" },
+                      caption: {
+                        fr: "Cuisine design, finitions premium",
+                        en: "Design kitchen, premium finishes",
+                      },
                     },
                   ].map((img) => (
                     <div
-                      key={img.label}
+                      key={img.label.en}
                       className="group relative overflow-hidden rounded-[var(--radius-lg)] border border-white/10 bg-black/30"
                     >
                       <div className="relative aspect-[16/10] w-full">
                         <Image
                           src={img.src}
-                          alt={img.alt}
+                          alt={img.caption[lang]}
                           fill
                           unoptimized
                           sizes="(max-width: 768px) 100vw, 50vw"
@@ -2252,10 +2247,10 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                         <div className="absolute bottom-4 left-4 right-4">
                           <div className="text-sm font-semibold text-white">
-                            {img.label}
+                            {img.label[lang]}
                           </div>
                           <div className="mt-1 text-sm text-white/70">
-                            {img.alt}
+                            {img.caption[lang]}
                           </div>
                         </div>
                       </div>
@@ -2346,62 +2341,24 @@ export default function Home({ initialLang }: { initialLang?: Lang }) {
               </Reveal>
 
               <Reveal delay={0.08} className="md:col-span-7">
-                <form
-                  onSubmit={onContactSubmit}
-                  className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-[var(--shadow)]"
-                >
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <label className="block">
-                      <div className="text-xs font-medium tracking-[0.14em] text-[color:var(--muted)]">
-                        {ui.name}
-                      </div>
-                      <input
-                        name="name"
-                        required
-                        className="mt-2 w-full rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface-2)] px-4 py-3 text-sm text-[color:var(--fg)] outline-none transition-colors focus:bg-[color:var(--surface)]"
-                        placeholder={ui.namePlaceholder}
-                      />
-                    </label>
-
-                    <label className="block">
-                      <div className="text-xs font-medium tracking-[0.14em] text-[color:var(--muted)]">
-                        {ui.email}
-                      </div>
-                      <input
-                        name="email"
-                        type="email"
-                        required
-                        className="mt-2 w-full rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface-2)] px-4 py-3 text-sm text-[color:var(--fg)] outline-none transition-colors focus:bg-[color:var(--surface)]"
-                        placeholder={ui.emailPlaceholder}
-                      />
-                    </label>
+                <div className="rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--surface)] p-8 shadow-[var(--shadow)]">
+                  <div className="text-sm font-semibold text-[color:var(--fg)]">
+                    {lang === "fr"
+                      ? "Contact par email uniquement"
+                      : "Email-only contact"}
                   </div>
-
-                  <label className="mt-4 block">
-                    <div className="text-xs font-medium tracking-[0.14em] text-[color:var(--muted)]">
-                      {ui.message}
-                    </div>
-                    <textarea
-                      name="message"
-                      required
-                      rows={6}
-                      className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-[color:var(--border)] bg-[color:var(--surface-2)] px-4 py-3 text-sm text-[color:var(--fg)] outline-none transition-colors focus:bg-[color:var(--surface)]"
-                      placeholder={ui.messagePlaceholder}
-                    />
-                  </label>
-
-                  <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-                    <div className="text-sm text-[color:var(--muted)]">
-                      {ui.mailHint}
-                    </div>
-                    <button
-                      type="submit"
-                      className="inline-flex items-center justify-center rounded-full bg-[linear-gradient(90deg,var(--gold),var(--champagne),var(--amber))] px-6 py-3 text-sm font-semibold tracking-wide text-[color:var(--fg)] shadow-[var(--glow)] transition-transform duration-300 hover:-translate-y-0.5"
-                    >
-                      {ui.sendEmail}
-                    </button>
+                  <div className="mt-3 text-sm leading-6 text-[color:var(--muted)]">
+                    {lang === "fr"
+                      ? "Pour garantir une réponse premium, nous centralisons tout par email."
+                      : "For a premium response experience, we handle all requests by email."}
                   </div>
-                </form>
+                  <a
+                    className="mt-6 inline-flex items-center gap-2 rounded-full bg-[linear-gradient(90deg,var(--gold),var(--champagne),var(--amber))] px-6 py-3 text-sm font-semibold tracking-wide text-[color:var(--fg)] shadow-[var(--glow)] transition-transform duration-300 hover:-translate-y-0.5"
+                    href={`mailto:${CONTACT_EMAIL}`}
+                  >
+                    {lang === "fr" ? "Envoyer un email →" : "Send an email →"}
+                  </a>
+                </div>
               </Reveal>
             </div>
           </Container>
